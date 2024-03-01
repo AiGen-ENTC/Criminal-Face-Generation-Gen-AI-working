@@ -4,36 +4,60 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Refiner</title>
+    <title>Forensic Criminal Face Sketcher GenAI Tool</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f5f5f5;
+            background-color: #1a1a1a; /* Dark background color */
+            color: #fff; /* Light text color */
             margin: 0;
             padding: 0;
-            text-align: center; /* Center text horizontally */
+            display: flex;
+            justify-content: space-between; /* Adjusted to have space between columns */
+        }
+
+        .left-column {
+            flex: 1; /* Adjusted to take 50% of the space */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
-        h1, p {
-            color: #000; /* Dark text color for headings, labels, and paragraphs */
+        .right-column {
+            flex: 1; /* Adjusted to take 50% of the space */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
-        label {
+        h1, h2 {
+            color: #ffffff;
+        }
+
+        .image-container {
+            margin-bottom: 20px;
+            width: 80%; /* Adjusted to take full width of the column */
+            box-sizing: border-box;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            width: 100%;
             display: block;
-            margin-bottom: 10px;
-            color: #000;
+            margin: 0 auto;
         }
 
         form {
-            background-color: #fff; /* Lighter background color for form */
-            color: #000; /* Dark text color for form */
+            background-color: #2a2a2a;
+            color: #fff;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Adjust the shadow color */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
             width: 80%;
             max-width: 400px;
             margin: 20px auto;
@@ -41,14 +65,17 @@
         }
 
         input {
-            background-color: #f2f2f2; /* Lighter background color for input */
-            color: #000; /* Dark text color for input */
+            background-color: #444;
+            color: #fff;
             width: 100%;
-            padding: 10px;
+            height: 100px;
+            padding: 15px;
+            margin-top: 20px;
             margin-bottom: 20px;
             box-sizing: border-box;
-            border: 1px solid #ccc; /* Lighter border color */
+            border: 1px solid #555;
             border-radius: 4px;
+            text-align: left;
         }
 
         button {
@@ -59,42 +86,60 @@
             border-radius: 4px;
             cursor: pointer;
             width: 100%;
+            margin-top: 10px; /* Adjusted margin */
         }
 
         button:hover {
             background-color: #34ff4c;
         }
     </style>
-</head>
 <body>
-    <h1>Image Refiner - Image {{image_number}}</h1>
-
-
-    <div class="image-container">
-        <img id="selectedImage" src="{{ url_for('static', filename='output' + image_number + '.png') }}" alt="Selected Image">
+    <div class="left-column">
+        <h1>Forensic Criminal Face Sketcher GenAI Tool</h1>
+        <h2>Image Refine Stage</h2>
+        <div class="image-container">
+            <img id="selectedImage" src="{{ url_for('static', filename='output' + image_number + '.png') }}" alt="Selected Image">
+        </div>
     </div>
 
-    <form>
-        <label for="refinePrompt">Refine Prompts:</label>
-        <input type="text" id="refinePrompt" required>
-        <button type="button" onclick="refineImage()">Refine Image</button>
-    </form>
+    <div class="right-column">
+        <form action="{{ url_for('refine_gen') }}" method="post">
+            <label for="refinePrompt">Enter refine information:</label>
+            <input type="text" name="refinePrompt" required>
+            <button type="submit">Refine Image</button>
+        </form>
 
-    <form action="{{ url_for('index') }}">
-        <button type="submit">Back to Index</button>
-    </form>
+        <form action="{{ url_for('index') }}">
+            <button type="submit">Back to Regeneration</button>
+        </form>
+    </div>
 
     <script>
-        function refineImage() {
-            // You can add logic here to handle refining the image with the entered prompts
-            alert("Refining image with prompts: " + document.getElementById('refinePrompt').value);
-        }
 
         function redirectToIndex() {
             // Redirect back to index.html
             window.location.href = url_for('generate');
         }
 
+        function redirectToImageRefiner(imageNumber) {
+            // Create a form element
+            var form = document.createElement('form');
+            form.method = 'post';
+            form.action = "{{ url_for('refine') }}";
+    
+            // Create an input element to hold the image number
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'image_number';
+            input.value = imageNumber;
+    
+            // Append the input element to the form
+            form.appendChild(input);
+    
+            // Append the form to the body and submit it
+            document.body.appendChild(form);
+            form.submit();
+        }
     </script>
 </body>
 </html>

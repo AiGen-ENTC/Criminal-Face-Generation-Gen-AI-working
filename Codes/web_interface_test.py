@@ -75,14 +75,55 @@ def generate():
 
     return render_template('index.html', refined_prompts=refined_prompts, base64_1=base64_img[0], base64_2=base64_img[1], base64_3=base64_img[2])
 
+@app.route('/refine_gen', methods=['POST'])
+def refine_gen():
+    prompt = request.form['refinePrompt']
+
+    # Read the image file and convert it to base64
+    with open("target.png", "rb") as img_file:
+        img_data = base64.b64encode(img_file.read()).decode('utf-8')
+
+    for i in range(3):
+        
+        # Define the payload to send for each image
+        payload = {
+            "positive_prompt": "photo, portrait, face, looking at viewer, plain background",
+            "negative_prompt": "(((deformed face))),(side view:1.2), worst quality, low quality, low res, blurry, text, watermark, logo, banner, extra digits, cropped, jpeg artifacts, error, sketch ,duplicate, monochrome, geometry, mutation, fused face, cloned face",
+            "prompt": prompt,
+            "steps": 10,
+            "width": 512,
+            "height": 512,
+            "init_images": [
+                img_data
+            ]
+        }
+
+        # Send payload to the API for each image
+        response = requests.post(url=f'http://127.0.0.1:7860/sdapi/v1/img2img', json=payload)
+        r = response.json()
+
+        base64_img[i] = r['images'][0]
+
+        # Decode and save the image with a unique filename
+        with open(f"static/output{i+1}.png", 'wb') as f:
+            f.write(base64.b64decode(r['images'][0]))
+
+    return render_template('index.html', refined_prompts=prompt, base64_1=base64_img[0], base64_2=base64_img[1], base64_3=base64_img[2])
+
+
 @app.route('/refine', methods=['POST'])
 def refine():
     image_number = request.form.get('image_number')
     
-    # Use the image_number variable as needed
-    
-    return render_template('image_refiner.html', image_number=image_number)
+    # Assuming you want to save the output image as 'target.png'
+    target_filename = 'target.png'
+    base64_image = base64_img[int(image_number) - 1]
 
+    # Decode and save the image with the specified filename
+    with open(target_filename, 'wb') as f:
+        f.write(base64.b64decode(base64_image))
+
+    return render_template('image_refiner.html', image_number=image_number)
 
 if __name__ == '__main__':
     app.run(debug=True)
