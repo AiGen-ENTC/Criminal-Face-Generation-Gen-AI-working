@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FacialSketchPro: Transformative Technology for Advanced Police Sketching and Private Investigations</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            text-align: center; /* Center text horizontally */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body::before {
+            content: ""; /* Create an empty pseudo-element */
+            flex-grow: 1; /* Allow it to grow to fill available space */
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a; /* Dark background color */
+            color: #fff; /* Light text color */
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1, p {
+            color: #fff; /* Light text color for headings, labels, and paragraphs */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        form {
+            background-color: #333; /* Darker background color for form */
+            color: #fff; /* Light text color for form */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Adjust the shadow color */
+            width: 80%;
+            max-width: 400px;
+            margin: 20px auto;
+            box-sizing: border-box;
+        }
+
+        input {
+            background-color: #444; /* Darker background color for input */
+            color: #fff; /* Light text color for input */
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            border: 1px solid #555; /* Darker border color */
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #32a3ff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #34ff4c;
+        }
+
+        .img-container img {
+            max-width: 30%;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            margin: 0;
+            filter: brightness(0.8); /* Adjust the brightness for images */
+            transition: filter 0.3s ease-in-out; /* Add transition for smooth effect */
+            border: 2px solid transparent; /* Initially transparent border */
+        }
+
+        .img-container img:hover {
+            filter: brightness(1.2); /* Adjust the brightness for images on hover */
+            border-color: #fff; /* White border on hover */
+        }
+
+        img {
+            max-width: 30%;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            margin: 0;
+            filter: brightness(0.8); /* Adjust the brightness for images */
+        }
+    </style>
+    <script>
+        function redirectToImageRefiner(imageNumber) {
+            // Create a form element
+            var form = document.createElement('form');
+            form.method = 'post';
+            form.action = "{{ url_for('refine') }}";
+    
+            // Create an input element to hold the image number
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'image_number';
+            input.value = imageNumber;
+    
+            // Append the input element to the form
+            form.appendChild(input);
+    
+            // Append the form to the body and submit it
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+    
+</head>
+<body>
+    <h1>Forensic Criminal Face Sketcher GenAI Tool</h1>
+    <h2>IES competition demonstration</h2>
+
+    <form action="{{ url_for('generate') }}" method="post">
+        <label for="prompt">Enter the descriptive facial information:</label>
+        <input type="text" name="prompt" required>
+        <button type="submit">Generate Image</button>
+    </form>
+
+    {% if refined_prompts %}
+        <p>Refined Prompt: {{refined_prompts}}</p>
+        <div class="image-container img-container">
+            <!-- {{ base64_1 }} -->
+            <img src="{{ url_for('static', filename='output1.png') }}" alt="Generated Image 1" onclick="redirectToImageRefiner(1)">
+            <!-- {{ base64_2 }} -->
+            <img src="{{ url_for('static', filename='output2.png') }}" alt="Generated Image 2" onclick="redirectToImageRefiner(2)">
+            <!-- {{ base64_3 }} -->
+            <img src="{{ url_for('static', filename='output3.png') }}" alt="Generated Image 3" onclick="redirectToImageRefiner(3)">
+        </div>
+    {% endif %}
+</body>
+
+</html>

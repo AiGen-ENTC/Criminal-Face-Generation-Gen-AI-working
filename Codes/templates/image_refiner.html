@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Refiner</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            text-align: center; /* Center text horizontally */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1, p {
+            color: #000; /* Dark text color for headings, labels, and paragraphs */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        form {
+            background-color: #fff; /* Lighter background color for form */
+            color: #000; /* Dark text color for form */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Adjust the shadow color */
+            width: 80%;
+            max-width: 400px;
+            margin: 20px auto;
+            box-sizing: border-box;
+        }
+
+        input {
+            background-color: #f2f2f2; /* Lighter background color for input */
+            color: #000; /* Dark text color for input */
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            border: 1px solid #ccc; /* Lighter border color */
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #32a3ff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #34ff4c;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Refiner - Image {{image_number}}</h1>
+
+
+    <div class="image-container">
+        <img id="selectedImage" src="{{ url_for('static', filename='output' + image_number + '.png') }}" alt="Selected Image">
+    </div>
+
+    <form>
+        <label for="refinePrompt">Refine Prompts:</label>
+        <input type="text" id="refinePrompt" required>
+        <button type="button" onclick="refineImage()">Refine Image</button>
+    </form>
+
+    <form action="{{ url_for('index') }}">
+        <button type="submit">Back to Index</button>
+    </form>
+
+    <script>
+        function refineImage() {
+            // You can add logic here to handle refining the image with the entered prompts
+            alert("Refining image with prompts: " + document.getElementById('refinePrompt').value);
+        }
+
+        function redirectToIndex() {
+            // Redirect back to index.html
+            window.location.href = url_for('generate');
+        }
+
+    </script>
+</body>
+</html>
